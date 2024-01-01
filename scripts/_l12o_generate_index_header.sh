@@ -2,7 +2,8 @@
 
 function generate_header() {
   directory="$1"
-  repo_dir="$(sed 's|/repo||g' <<< ${directory})"
+  repo_dir="$(sed 's|/repo||g' <<< ${directory})/"
+
 
   cat <<EOF
 <!DOCTYPE html>
@@ -15,20 +16,20 @@ function generate_header() {
     body {
       font-family: 'Fira Mono', monospace;
       font-size: 16px;
-      background-color: #fff; /* Default background color (light mode) */
-      color: #333; /* Default text color (light mode) */
+      background-color: #ccc; /* Default background color (light mode) */
+      color: #222; /* Default text color (light mode) */
       transition: background-color 0.3s, color 0.3s;
     }
 
     /* Dark mode */
     body.dark-mode {
-      background-color: #111; /* Very dark grey background in dark mode */
+      background-color: #222; /* Very dark grey background in dark mode */
       color: #999; /* Light grey/cream-colored text in dark mode */
     }
 
     /* Terminal green for code text in dark mode */
     body.dark-mode .code-block {
-      color: #00ff00;
+      color: #11ff11;
     }
 
     .container {
@@ -38,8 +39,8 @@ function generate_header() {
     }
 
     h1 {
-      text-align: center;
-      color: #333; /* Light grey/cream-colored text for headings */
+      text-align: left;
+      color: #333;
     }
 
     table {
@@ -50,7 +51,8 @@ function generate_header() {
     }
 
     table, th, td {
-      border: 1px solid #ccc;
+      border-top: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
     }
 
     th, td {
@@ -83,6 +85,7 @@ function generate_header() {
 
     /* Code block styles */
     .code-block {
+      font-weight: bold;
       width: 100%;
       max-width: 100%;
       overflow-x: auto;
@@ -113,16 +116,23 @@ function generate_header() {
       color: #00aaff; /* Adjust the link color in dark mode for better legibility */
     }
   </style>
+
+
   <script>
+    // Wait for the DOM content to be fully loaded
+  document.addEventListener('DOMContentLoaded', function() {
     // Check if dark mode is preferred by the user's system
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      document.body.classList.add('dark-mode');
+      // Make sure the 'body' element exists before accessing its classList
+      if (document.body) {
+        document.body.classList.add('dark-mode');
+      }
     }
+  });
   </script>
 </head>
 <body>
   <div class="container">
-    <h1>index of ${repo_dir}</h1>
     <pre class="code-block">
                   ,.
                (\(\)
@@ -137,6 +147,7 @@ function generate_header() {
      //
     \`\\=
     </pre>
+    <h1>index of ${repo_dir}</h1>
     <table class="table">
       <thead>
         <tr>

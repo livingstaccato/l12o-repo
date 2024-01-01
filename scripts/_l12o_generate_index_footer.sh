@@ -11,7 +11,7 @@ function generate_footer() {
     const body = document.querySelector('body');
     document.addEventListener('DOMContentLoaded', () => {
       const darkModeToggle = document.createElement('button');
-      darkModeToggle.textContent = 'Toggle Dark Mode';
+      darkModeToggle.textContent = '🔦';
       darkModeToggle.classList.add('dark-mode-toggle');
       document.body.appendChild(darkModeToggle);
 
