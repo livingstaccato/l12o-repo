@@ -16,7 +16,7 @@ function generate_header() {
     body {
       font-family: 'Fira Mono', monospace;
       font-size: 16px;
-      background-color: #ccc; /* Default background color (light mode) */
+      background-color: #efefef; /* Default background color (light mode) */
       color: #222; /* Default text color (light mode) */
       transition: background-color 0.3s, color 0.3s;
     }
@@ -51,8 +51,8 @@ function generate_header() {
     }
 
     table, th, td {
-      border-top: 1px solid #ccc;
-      border-bottom: 1px solid #ccc;
+      border-top: 1px solid #666;
+      border-bottom: 1px solid #666;
     }
 
     th, td {
@@ -141,7 +141,7 @@ function generate_header() {
 \`={\`-._____/\`    |        | |(_, |(_)  ) )   _       _ __   __   _ _      _   
  \`-{ /    -=\`\   |        | |  | |   /' /  /'_\`\\    ( '__)/'__\`\\( '_\`\\  /'_\`\\ 
   \`={  -= = _/   /        | |  | | /' /( )( (_) )   | |  (  ___/| (_) )( (_) )
-     \`\\  .-'   /\`        (___) (_)(_____/'\`\\___/'   (_)  \`\\____)| ,__/\`\\____/'
+     \`\\  .-'   /\`        (___) (_)(_____/'\`\\___/'   (_)  \`\\____)| ,__/'\`\\___/'
       {\`-,__.'===,_                                             | |           
       //\`        \`\\\\                                            (_)           
      //
