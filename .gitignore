@@ -1,0 +1,17 @@
+local.*
+
+/build/
+/logs/
+/repo/
+/rpms/
+/sources/
+/source/
+/src/
+/srpms/
+
+rpmbuild
+BUILD
+BUILDROOT
+RPMS
+SOURCES
+SRPMS

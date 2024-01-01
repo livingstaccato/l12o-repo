@@ -1,0 +1,135 @@
+From 9b0b723a0e62f18d41be53900ab8a3e710708563 Mon Sep 17 00:00:00 2001
+From: Rob Crittenden <rcritten@redhat.com>
+Date: Thu, 18 May 2023 09:23:32 -0400
+Subject: [PATCH] Allow password policy minlength to be removed like other
+ values
+
+This is a side-effect of adding the libpwquality options. It
+imposes its own hardcoded minimum password length so some care
+was needed to ensure that it isn't set too low.
+
+So if there are no libpwquality options used then it's fine to
+have no minlength in the policy.
+
+Fixes: https://pagure.io/freeipa/issue/9297
+
+Signed-off-by: Rob Crittenden <rcritten@redhat.com>
+Reviewed-By: Alexander Bokovoy <abokovoy@redhat.com>
+Reviewed-By: Florence Blanc-Renaud <frenaud@redhat.com>
+---
+ ipaserver/plugins/pwpolicy.py              | 10 +++--
+ ipatests/test_integration/test_pwpolicy.py | 45 +++++++++++++++++++++-
+ 2 files changed, 50 insertions(+), 5 deletions(-)
+
+diff --git a/ipaserver/plugins/pwpolicy.py b/ipaserver/plugins/pwpolicy.py
+index 5ea3e6b78..15cfef45b 100644
+--- a/ipaserver/plugins/pwpolicy.py
++++ b/ipaserver/plugins/pwpolicy.py
+@@ -462,6 +462,7 @@ class pwpolicy(LDAPObject):
+             return False
+ 
+         has_pwquality_value = False
++        min_length = 0
+         if not add:
+             if len(keys) > 0:
+                 existing_entry = self.api.Command.pwpolicy_show(
+@@ -470,14 +471,15 @@ class pwpolicy(LDAPObject):
+                 existing_entry = self.api.Command.pwpolicy_show(
+                     all=True,)['result']
+             existing_entry.update(entry_attrs)
+-            min_length = int(get_val(existing_entry, 'krbpwdminlength'))
+-
++            if existing_entry.get('krbpwdminlength'):
++                min_length = int(get_val(existing_entry, 'krbpwdminlength'))
+             has_pwquality_value = has_pwquality_set(existing_entry)
+         else:
+-            min_length = int(get_val(entry_attrs, 'krbpwdminlength'))
++            if entry_attrs.get('krbpwdminlength'):
++                min_length = int(get_val(entry_attrs, 'krbpwdminlength'))
+             has_pwquality_value = has_pwquality_set(entry_attrs)
+ 
+-        if min_length and min_length < 6 and has_pwquality_value:
++        if min_length < 6 and has_pwquality_value:
+             raise errors.ValidationError(
+                 name='minlength',
+                 error=_('Minimum length must be >= 6 if maxrepeat, '
+diff --git a/ipatests/test_integration/test_pwpolicy.py b/ipatests/test_integration/test_pwpolicy.py
+index 41d6e9070..652c95e47 100644
+--- a/ipatests/test_integration/test_pwpolicy.py
++++ b/ipatests/test_integration/test_pwpolicy.py
+@@ -36,7 +36,9 @@ class TestPWPolicy(IntegrationTest):
+         cls.master.run_command(['ipa', 'group-add-member', POLICY,
+                                 '--users', USER])
+         cls.master.run_command(['ipa', 'pwpolicy-add', POLICY,
+-                                '--priority', '1', '--gracelimit', '-1'])
++                                '--priority', '1',
++                                '--gracelimit', '-1',
++                                '--minlength', '6'])
+         cls.master.run_command(['ipa', 'passwd', USER],
+                                stdin_text='{password}\n{password}\n'.format(
+                                password=PASSWORD
+@@ -92,6 +94,12 @@ class TestPWPolicy(IntegrationTest):
+              "--minlength", "0",
+              "--minclasses", "0",],
+         )
++        # minlength => 6 is required for any of the libpwquality settings
++        self.master.run_command(
++            ["ipa", "pwpolicy-mod", POLICY,
++             "--minlength", "6"],
++            raiseonerr=False,
++        )
+ 
+     @pytest.fixture
+     def reset_pwpolicy(self):
+@@ -212,6 +220,7 @@ class TestPWPolicy(IntegrationTest):
+             assert 'Password is too simple' in \
+                 result.stdout_text
+ 
++        self.reset_password(self.master)
+         # test with valid password
+         for valid in ('Passw0rd', 'password1!', 'Password!'):
+             self.kinit_as_user(self.master, PASSWORD, valid)
+@@ -252,6 +261,40 @@ class TestPWPolicy(IntegrationTest):
+             assert result.returncode != 0
+             assert 'minlength' in result.stderr_text
+ 
++    def test_minlength_empty(self, reset_pwpolicy):
++        """Test that the pwpolicy minlength can be blank
++        """
++        # Ensure it is set to a non-zero value to avoid EmptyModlist
++        self.master.run_command(
++            ["ipa", "pwpolicy-mod", POLICY,
++             "--minlength", "10",]
++        )
++        # Enable one of the libpwquality options, removing minlength
++        # should fail.
++        self.master.run_command(
++            ["ipa", "pwpolicy-mod", POLICY,
++             "--maxrepeat", "4",]
++        )
++        result = self.master.run_command(
++            ["ipa", "pwpolicy-mod", POLICY,
++             "--minlength", "",], raiseonerr=False
++        )
++        assert result.returncode != 0
++
++        # Remove the blocking value
++        self.master.run_command(
++            ["ipa", "pwpolicy-mod", POLICY,
++             "--maxrepeat", "",]
++        )
++
++        # Now erase it
++        result = self.master.run_command(
++            ["ipa", "pwpolicy-mod", POLICY,
++             "--minlength", "",]
++        )
++        assert result.returncode == 0
++        assert 'minlength' not in result.stderr_text
++
+     def test_minlength_add(self):
+         """Test that adding a new policy with minlength is caught.
+         """
+-- 
+2.41.0
+

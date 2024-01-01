@@ -1,0 +1,109 @@
+From 66876813aa7e96ae2c15241c1fc32772e08e41e4 Mon Sep 17 00:00:00 2001
+From: Simon Pichugin <spichugi@redhat.com>
+Date: Wed, 23 Aug 2023 15:37:25 -0700
+Subject: [PATCH] Issue 5853 - Revert MSRV check (#5908)
+
+Description: We should be careful with rust-version manifest field
+on older 389-ds-base versions as it's harder to predict at which
+point in time Rust was updated in some older environments.
+
+Related: https://github.com/389ds/389-ds-base/issues/5861
+
+Reviewed by: @vashirov (Thanks!)
+---
+ src/librnsslapd/Cargo.toml              | 1 -
+ src/librslapd/Cargo.toml                | 1 -
+ src/plugins/entryuuid/Cargo.toml        | 1 -
+ src/plugins/entryuuid_syntax/Cargo.toml | 1 -
+ src/plugins/pwdchan/Cargo.toml          | 1 -
+ src/slapd/Cargo.toml                    | 1 -
+ src/slapi_r_plugin/Cargo.toml           | 1 -
+ 7 files changed, 7 deletions(-)
+
+diff --git a/src/librnsslapd/Cargo.toml b/src/librnsslapd/Cargo.toml
+index c18ab7fc8..11bb9afe7 100644
+--- a/src/librnsslapd/Cargo.toml
++++ b/src/librnsslapd/Cargo.toml
+@@ -2,7 +2,6 @@
+ name = "librnsslapd"
+ version = "0.1.0"
+ authors = ["William Brown <william@blackhats.net.au>"]
+-rust-version = "1.70"
+ edition = "2018"
+ build = "build.rs"
+ 
+diff --git a/src/librslapd/Cargo.toml b/src/librslapd/Cargo.toml
+index fb445c251..15c00a47b 100644
+--- a/src/librslapd/Cargo.toml
++++ b/src/librslapd/Cargo.toml
+@@ -2,7 +2,6 @@
+ name = "librslapd"
+ version = "0.1.0"
+ authors = ["William Brown <william@blackhats.net.au>"]
+-rust-version = "1.70"
+ edition = "2018"
+ build = "build.rs"
+ 
+diff --git a/src/plugins/entryuuid/Cargo.toml b/src/plugins/entryuuid/Cargo.toml
+index f0d8e9f2a..c43d7a771 100644
+--- a/src/plugins/entryuuid/Cargo.toml
++++ b/src/plugins/entryuuid/Cargo.toml
+@@ -2,7 +2,6 @@
+ name = "entryuuid"
+ version = "0.1.0"
+ authors = ["William Brown <william@blackhats.net.au>"]
+-rust-version = "1.70"
+ edition = "2018"
+ 
+ # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+diff --git a/src/plugins/entryuuid_syntax/Cargo.toml b/src/plugins/entryuuid_syntax/Cargo.toml
+index d80b59bf1..f7d3d64c9 100644
+--- a/src/plugins/entryuuid_syntax/Cargo.toml
++++ b/src/plugins/entryuuid_syntax/Cargo.toml
+@@ -2,7 +2,6 @@
+ name = "entryuuid_syntax"
+ version = "0.1.0"
+ authors = ["William Brown <william@blackhats.net.au>"]
+-rust-version = "1.70"
+ edition = "2018"
+ 
+ # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+diff --git a/src/plugins/pwdchan/Cargo.toml b/src/plugins/pwdchan/Cargo.toml
+index 3cda69f22..40d8a54aa 100644
+--- a/src/plugins/pwdchan/Cargo.toml
++++ b/src/plugins/pwdchan/Cargo.toml
+@@ -2,7 +2,6 @@
+ name = "pwdchan"
+ version = "0.1.0"
+ authors = ["William Brown <william@blackhats.net.au>"]
+-rust-version = "1.70"
+ edition = "2018"
+ 
+ # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+diff --git a/src/slapd/Cargo.toml b/src/slapd/Cargo.toml
+index 39b6fdd1d..a18cb7626 100644
+--- a/src/slapd/Cargo.toml
++++ b/src/slapd/Cargo.toml
+@@ -2,7 +2,6 @@
+ name = "slapd"
+ version = "0.1.0"
+ authors = ["William Brown <william@blackhats.net.au>"]
+-rust-version = "1.70"
+ edition = "2018"
+ 
+ # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+diff --git a/src/slapi_r_plugin/Cargo.toml b/src/slapi_r_plugin/Cargo.toml
+index 024bd464a..9d197ec85 100644
+--- a/src/slapi_r_plugin/Cargo.toml
++++ b/src/slapi_r_plugin/Cargo.toml
+@@ -2,7 +2,6 @@
+ name = "slapi_r_plugin"
+ version = "0.1.0"
+ authors = ["William Brown <william@blackhats.net.au>"]
+-rust-version = "1.70"
+ edition = "2018"
+ build = "build.rs"
+ 
+-- 
+2.41.0
+

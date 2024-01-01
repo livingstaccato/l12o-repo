@@ -1,0 +1,80 @@
+From d50624dce932d02ea03a00d3ac2ec1be69e8d3b6 Mon Sep 17 00:00:00 2001
+From: Florence Blanc-Renaud <flo@redhat.com>
+Date: Thu, 19 Oct 2023 12:47:03 +0200
+Subject: [PATCH 1/2] group-add-member fails with an external member
+
+The command ipa group-add-member --external aduser@addomain.test
+fails with an internal error when used with samba 4.19.
+
+The command internally calls samba.security.dom_sid(sid) which
+used to raise a TypeError but now raises a ValueError
+(commit 9abdd67 on https://github.com/samba-team/samba).
+
+IPA source code needs to handle properly both exception types.
+
+Fixes: https://pagure.io/freeipa/issue/9466
+
+Signed-off-by: Florence Blanc-Renaud <flo@redhat.com>
+Reviewed-By: Rob Crittenden <rcritten@redhat.com>
+---
+ ipaserver/dcerpc.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ipaserver/dcerpc.py b/ipaserver/dcerpc.py
+index 741f0608f..7e585c876 100644
+--- a/ipaserver/dcerpc.py
++++ b/ipaserver/dcerpc.py
+@@ -303,7 +303,7 @@ class DomainValidator:
+         # Parse sid string to see if it is really in a SID format
+         try:
+             test_sid = security.dom_sid(sid)
+-        except TypeError:
++        except (TypeError, ValueError):
+             raise errors.ValidationError(name='sid',
+                                          error=_('SID is not valid'))
+ 
+-- 
+2.41.0
+
+
+From ed6fa6029d863aed1522b449d3360e6c4028e066 Mon Sep 17 00:00:00 2001
+From: Florence Blanc-Renaud <flo@redhat.com>
+Date: Fri, 20 Oct 2023 10:20:57 +0200
+Subject: [PATCH 2/2] Handle samba changes in samba.security.dom_sid()
+
+samba.security.dom_sid() in 4.19 now raises ValueError instead of
+TypeError. Fix the expected exception.
+
+Related: https://pagure.io/freeipa/issue/9466
+
+Signed-off-by: Florence Blanc-Renaud <flo@redhat.com>
+Reviewed-By: Alexander Bokovoy <abokovoy@redhat.com>
+---
+ ipaserver/dcerpc.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/ipaserver/dcerpc.py b/ipaserver/dcerpc.py
+index 7e585c876..675572c03 100644
+--- a/ipaserver/dcerpc.py
++++ b/ipaserver/dcerpc.py
+@@ -97,7 +97,7 @@ logger = logging.getLogger(__name__)
+ def is_sid_valid(sid):
+     try:
+         security.dom_sid(sid)
+-    except TypeError:
++    except (TypeError, ValueError):
+         return False
+     else:
+         return True
+@@ -457,7 +457,7 @@ class DomainValidator:
+         try:
+             test_sid = security.dom_sid(sid)
+             return unicode(test_sid)
+-        except TypeError:
++        except (TypeError, ValueError):
+             raise errors.ValidationError(name=_('trusted domain object'),
+                                          error=_('Trusted domain did not '
+                                                  'return a valid SID for '
+-- 
+2.41.0
+

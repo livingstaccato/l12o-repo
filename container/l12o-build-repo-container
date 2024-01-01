@@ -1,0 +1,17 @@
+#!/bin/bash
+
+container_label=l12o-repo
+echo "container_label: ${container_label}"
+
+container_dir="$(dirname ${0})"
+echo "container_dir: ${container_dir}"
+
+docker build \
+  --file ${container_dir}/Dockerfile \
+  --tag ${container_label}:latest \
+  --label ${container_label} \
+  .
+
+docker image prune \
+  --force \
+  --filter="label=${container_label}"

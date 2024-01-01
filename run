@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Get the directory where the script is located
+L12O_REPO_BASE=$(dirname "$(readlink -f "$0")")
+
+BUILD_BASE=/build
+
+docker run --rm -it \
+    -v "${L12O_REPO_BASE}:/host" \
+    -v "${L12O_REPO_BASE}/repo:/repo" \
+    -v "${L12O_REPO_BASE}/specs:/specs" \
+    -v "${L12O_REPO_BASE}/specs:${BUILD_BASE}/SPECS" \
+    -v "${L12O_REPO_BASE}/source:/source" \
+    -v "${L12O_REPO_BASE}/source:${BUILD_BASE}/SOURCES" \
+    -v "${L12O_REPO_BASE}/patches:/patches" \
+    -v "${L12O_REPO_BASE}/rpms:/rpms" \
+    -v "${L12O_REPO_BASE}/rpms:${BUILD_BASE}/RPMS" \
+    -v "${L12O_REPO_BASE}/srpms:/srpms" \
+    -v "${L12O_REPO_BASE}/srpms:${BUILD_BASE}/SRPMS" \
+    -v "${L12O_REPO_BASE}/logs:/logs" \
+    -v "${L12O_REPO_BASE}/scripts:/scripts" \
+    \
+    l12o-repo:latest
