@@ -84,8 +84,6 @@ pushd ${BUILD_DIR}/SPECS
 
 cp -v /patches/* ${BUILD_DIR}/SOURCES/
 
-build_spec zsh.spec
-
 build_spec argparse-manpage.spec
 build_spec python-ldap.spec
 build_spec python-augeaus.spec
@@ -98,7 +96,7 @@ build_spec pyusb.spec
 install_rpms
 
 build_spec certmonger.spec
-build_spec python-qrcode
+build_spec python-qrcode.spec
 
 install_rpms
 

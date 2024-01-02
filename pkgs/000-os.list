@@ -354,6 +354,8 @@ policycoreutils
 policycoreutils-devel
 policycoreutils-python-utils
 popt-devel
+protobuf
+protobuf-compiler
 psmisc
 publicsuffix-list
 qdox
