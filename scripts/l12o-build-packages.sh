@@ -95,17 +95,17 @@ build_spec pyusb.spec
 
 install_rpms
 
-build_spec certmonger.spec
-build_spec python-qrcode.spec
-
-install_rpms
-
+build_spec python-qrcode.spec     # requires pypng
 build_spec python-yubico.spec     # requires pyusb
 build_spec python-deprecated.spec # requires wrapt
 
 install_rpms
 
 build_spec python-jwcrypto.spec # requires python-deprecated
+
+install_rpms
+
+build_spec certmonger.spec
 build_spec 389-ds-base.spec     # requires argparse-manpage, python-ldap
 
 install_rpms
