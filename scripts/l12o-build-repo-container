@@ -1,10 +1,18 @@
 #!/bin/bash
 
 container_label=l12o-repo
-echo "container_label: ${container_label}"
 
-container_dir="$(dirname ${0})"
+container_dir="$(dirname ${0})/../container"
+
+
+echo "pwd: $(pwd)"
+echo "container_label: ${container_label}"
 echo "container_dir: ${container_dir}"
+
+cd ${container_dir}/../
+
+pwd
+echo
 
 docker build \
   --file ${container_dir}/Dockerfile \

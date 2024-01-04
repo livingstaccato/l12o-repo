@@ -37,9 +37,9 @@ build                  \
 && echo "exit code: ${?}"
 
 COPY /pkgs/* /pkgs/
-COPY /scripts/* /scripts/
+COPY /scripts/_l12o-install-packages.sh /scripts/
 
-RUN /scripts/l12o-install-packages.sh
+RUN /scripts/_l12o-install-packages.sh
 
 WORKDIR /
 
@@ -55,5 +55,7 @@ mv /root/.* / \
 &&  sed -i 's|:/root|:/|g' /etc/passwd
 
 COPY /container/overlay/ /
+COPY /scripts/* /scripts/
+
 
 CMD zsh
