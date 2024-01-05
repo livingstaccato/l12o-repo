@@ -2,8 +2,23 @@
 
 function generate_header() {
   directory="$1"
-  repo_dir="$(sed 's|/repo||g' <<< ${directory})/"
+  repo_dir="$(sed 's|^/repo||g' <<<${directory})/"
 
+  trail=""
+  trail_path=""
+
+  for crumb in $(sed 's|/| |g' <<<${repo_dir}); do
+    trail+="/${crumb}"
+
+    trail_path+='/<a href="'
+    trail_path+="${trail}"
+    trail_path+='">'
+    trail_path+="${crumb}"
+    trail_path+="</a>"
+
+  done
+
+  trail_path+="/"
 
   cat <<EOF
 <!DOCTYPE html>
@@ -147,7 +162,7 @@ function generate_header() {
      //
     \`\\=
     </pre>
-    <h1>index of ${repo_dir}</h1>
+    <h1>index of ${trail_path}</h1>
     <table class="table">
       <thead>
         <tr>

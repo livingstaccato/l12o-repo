@@ -33,6 +33,7 @@ cdi-api
 cglib
 checkpolicy
 chkconfig
+chrman
 clang-resource-filesystem
 cmake
 cmake-data
@@ -69,6 +70,7 @@ fasterxml-oss-parent
 felix-utils
 fftw-libs-double
 fontawesome-fonts
+fuse-devel
 gcc-gdb-plugin
 gdb
 gdb-headless
@@ -81,12 +83,15 @@ go-rpm-macros
 golang
 golang-bin
 golang-github-cpuguy83-md2man
+golang-shared
 golang-src
+golang-tests
 golist
 google-guice
 google-roboto-slab-fonts
 guava
 hamcrest
+help2man
 hostname
 httpcomponents-client
 httpcomponents-core
@@ -144,6 +149,7 @@ libdb-utils
 libedit-devel
 libev
 libevent-devel
+libglvnd-devel
 libibverbs
 libicu
 libicu-devel

@@ -1,0 +1,6 @@
+[l12o]
+name=l12o repo
+baseurl=https://repo.l12o.com/rpm/amzn/2023/$basearch/
+enabled=1
+gpgcheck=0
+repo_gpgcheck=0

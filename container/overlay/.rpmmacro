@@ -1,0 +1,5 @@
+%_topdir %{getenv:BUILD_DIR}
+%global debug_package %{nil}
+#%__make "/usr/bin/make -j 12"
+%__make %{getenv:MAKE_CMD}
+
