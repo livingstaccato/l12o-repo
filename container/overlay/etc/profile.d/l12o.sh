@@ -18,3 +18,7 @@ alias trepo='pushd /home'
 alias trpms='pushd /rpms'
 alias tspecs='pushd /srpms'
 alias tsrpms='pushd /srpms'
+
+alias specg='spectool -g -R'
+alias specb='rpmbuild -ba'
+
