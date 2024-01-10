@@ -67,3 +67,11 @@ python3-typing-extensions
 python3-urllib3
 python3-utils
 python3-wheel
+python3-Cython
+python3-trustme
+python3-brotli
+
+python3-pytest-mock
+python3-numpy
+python3-jedi
+python3-parse

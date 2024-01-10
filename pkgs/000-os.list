@@ -410,3 +410,12 @@ xmvn-tools
 xz-java
 yum-utils
 zsh
+emacs
+audit-libs-devel
+file-devel
+ima-evm-utils-devel
+libacl-devel
+libarchive-devel
+lua-devel
+readline-devel
+sqlite-devel
