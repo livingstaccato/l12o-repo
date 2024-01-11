@@ -396,6 +396,7 @@ tomcat9-jsp-2.3-api
 tomcat9-lib
 tomcat9-servlet-4.0-api
 univocity-parsers
+util-linux
 util-linux-user
 velocity
 vim-filesystem
